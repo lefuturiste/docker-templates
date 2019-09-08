@@ -1,36 +1,36 @@
-# php fpm: debian + php7.2 + php7.2-fpm + nginx
+# php fpm: debian + php7.3 + php7.3-fpm + nginx
 # expose on 80
 # automatic internal propagation of the environments variables
 
 FROM debian
 LABEL maintainer="spamfree@matthieubessat.fr"
+
 ADD ./php-fpm-nginx.conf ./php-fpm-nginx.conf
 RUN mkdir /app
 ADD ./add_env_vars.php ./add_env_vars.php
+ADD ./config_fpm_pm.php ./config_fpm_pm.php
 ADD ./start.sh ./start.sh
 
 # update & upgrade debian packages
-RUN apt-get update && apt-get -y upgrade
+RUN apt update && apt -y upgrade
 
-# install php, php-fpm and composer
-RUN apt-get install -y apt-transport-https lsb-release ca-certificates wget
+# install php & composer
+RUN apt -y install lsb-release apt-transport-https ca-certificates wget
 RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
-RUN echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
-RUN apt-get update && apt-get -y upgrade
-RUN apt-get -y install curl
-RUN apt-get -y install unzip zip
-RUN apt-get -y install php7.2 php7.2-common php7.2-cli php7.2-fpm php7.2-zip php7.2-xml
-RUN apt-get -y install php7.2-common php7.2-json php7.2-curl php7.2-mbstring php7.2-bcmath php7.2-mysql
-RUN apt-get -y install composer
+RUN "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php7.3.list
+RUN apt update
+RUN apt -y install php7.3
+RUN apt -y install php7.3-cli php7.3-fpm php7.3-json php7.3-pdo php7.3-mysql php7.3-zip php7.3-gd  php7.3-mbstring php7.3-curl php7.3-xml php7.3-bcmath php7.3-json
+RUN apt -y install composer
 
 # install nginx
-RUN apt-get -y install nginx
+RUN apt -y install nginx
 RUN rm /etc/nginx/sites-enabled/default
 RUN cp ./php-fpm-nginx.conf /etc/nginx/sites-enabled/default
 RUN chmod -R 777 /app
 RUN chown -R www-data:www-data /app
-RUN service php7.2-fpm restart
-RUN service nginx restart
+
+RUN nginx -t
 
 EXPOSE 80
 

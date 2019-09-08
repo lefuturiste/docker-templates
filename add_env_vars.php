@@ -1,7 +1,7 @@
 <?php
 
 $originFile = '/app/.env.example';
-$destinationWriteFile = '/etc/php/7.2/fpm/pool.d/www.conf';
+$destinationWriteFile = '/etc/php/7.3/fpm/pool.d/www.conf';
 
 if (file_exists($originFile)){
 
