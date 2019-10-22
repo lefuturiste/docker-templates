@@ -15,20 +15,17 @@ ADD ./start.sh ./start.sh
 RUN apt update && apt -y upgrade
 
 # install php & composer
-RUN apt -y install lsb-release apt-transport-https ca-certificates wget
+RUN apt -y install nano vim lsb-release apt-transport-https ca-certificates wget
 RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 RUN "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php7.3.list
 RUN apt update
-RUN apt -y install php7.3
-RUN apt -y install php7.3-cli php7.3-fpm php7.3-json php7.3-pdo php7.3-mysql php7.3-zip php7.3-gd  php7.3-mbstring php7.3-curl php7.3-xml php7.3-bcmath php7.3-json
+RUN apt -y install php7.3 php7.3-fpm php7.3-json php7.3-pdo php7.3-mysql php7.3-zip php7.3-gd  php7.3-mbstring php7.3-curl php7.3-xml php7.3-bcmath
 RUN apt -y install composer
 
 # install nginx
 RUN apt -y install nginx
 RUN rm /etc/nginx/sites-enabled/default
 RUN cp ./php-fpm-nginx.conf /etc/nginx/sites-enabled/default
-RUN chmod -R 777 /app
-RUN chown -R www-data:www-data /app
 
 RUN nginx -t
 
@@ -36,7 +33,16 @@ EXPOSE 80
 
 WORKDIR /app
 
+ENV FPM_PM dynamic
+ENV FPM_PM_MAX_CHILDREN 5
+ENV FPM_PM_START_SERVERS 2
+ENV FPM_PM_MIN_SPARE_SERVERS 1
+ENV FPM_PM_MAX_SPARE_SERVERS 3
+
 # ADD . /app
 # set envs vars
+
+RUN chmod -R 777 /app
+RUN chown -R www-data:www-data /app
 
 CMD sh /start.sh

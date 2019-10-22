@@ -1,5 +1,7 @@
 <?php
 $confPath = "/etc/php/7.3/fpm/pool.d/www.conf";
+var_dump($_ENV);
+var_dump(getenv());
 $lines = explode("\n", file_get_contents($confPath));
 $newLines = "";
 foreach($lines as $line) {
@@ -8,8 +10,9 @@ foreach($lines as $line) {
 	$id = str_replace(" ", "", $components[0]);
 	$id = str_replace("pm.", "pm_", $components[0]);
 	$id = strtoupper($id);
-	$line = $components[0] . " = " . getenv('FPM_' . $id);
-	echo "Edited: " . $id . " \n";
+	$id = str_replace(' ', '', $id);
+	$line = $components[0] . " = " . getenv()['FPM_' . $id];
+	echo "Edited: " . $id . " with value " . getenv()['FPM_' . $id] . " \n";
   }
   $newLines .= $line . "\n";
 }
