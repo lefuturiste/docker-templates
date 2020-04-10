@@ -28,6 +28,17 @@ echo "> nginx env vars config..."
 php /config_nginx_env_vars.php
 echo "> done"
 
+echo "> crontab config..."
+[ -f /app/tasks.cron ] && cp /app/tasks.cron /etc/cron.d/tasks && echo "Cron file tasks.cron copied in /etc/cron.d"
+chmod 0644 /etc/cron.d/tasks
+crontab /etc/cron.d/tasks
+cron
+echo "> done"
+
+echo "> reloading cron..."
+/etc/init.d/cron reload
+echo "> done"
+
 echo "> running composer install..."
 composer install
 echo "> done"
