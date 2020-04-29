@@ -1,5 +1,5 @@
 <?php
-$confPath = "/etc/php/7.3/fpm/pool.d/www.conf";
+$confPath = "/etc/php/7.4/fpm/pool.d/www.conf";
 var_dump($_ENV);
 var_dump(getenv());
 $lines = explode("\n", file_get_contents($confPath));
