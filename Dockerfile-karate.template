@@ -12,6 +12,12 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
 RUN sh nodesource_setup.sh
 RUN apt-get install -y nodejs
 
+# Install chromium headless
+RUN apt install -y chromium
+
+# Debug tools
+RUN apt install -y nano
+
 # WORKDIR /app
 # RUN npm i 
 # RUN node install-karate.js
