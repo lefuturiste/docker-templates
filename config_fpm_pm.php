@@ -16,5 +16,5 @@ foreach($lines as $line) {
   }
   $newLines .= $line . "\n";
 }
-
+$newLines .= "clear_env=no\n";
 file_put_contents($confPath, $newLines);
